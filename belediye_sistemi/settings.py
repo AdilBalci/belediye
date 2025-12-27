@@ -84,7 +84,7 @@ WSGI_APPLICATION = "belediye_sistemi.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://postgres:BelediyeDb2024@db.xldntntddknnxoqciwrp.supabase.co:5432/postgres")
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://postgres:Belediye2026@db.xldntntddknnxoqciwrp.supabase.co:5432/postgres")
 
 DATABASES = {
     "default": dj_database_url.config(
