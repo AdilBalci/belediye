@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Belediye Yönetim Sistemi{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .sidebar { min-height: 100vh; background: #2c3e50; color: white; }
+        .sidebar a { color: #ecf0f1; text-decoration: none; padding: 10px 15px; display: block; }
+        .sidebar a:hover { background: #34495e; }
+        .content { padding: 20px; }
+        .card { margin-bottom: 20px; border: none; shadow-sm: 0 0 10px rgba(0,0,0,0.05); }
+        .navbar-brand { font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">🏙️ Belediye Sis.</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><span class="nav-link text-light">Merhaba, {{ user.username }} ({{ user.get_role_display }})</span></li>
+                        <li class="nav-item">
+                            <form action="{% url 'logout' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="nav-link btn btn-link text-danger">Çıkış Yap</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Giriş</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Kayıt Ol</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            {% if user.is_authenticated %}
+            <div class="col-md-2 sidebar p-0 d-none d-md-block">
+                <div class="py-4">
+                    <a href="{% url 'home' %}"><i class="fas fa-home me-2"></i> Ana Sayfa</a>
+
+                    {% if user.is_citizen_role %}
+                        <a href="{% url 'complaint_list' %}"><i class="fas fa-bullhorn me-2"></i> Şikayetlerim</a>
+                        <a href="{% url 'create_complaint' %}"><i class="fas fa-plus-circle me-2"></i> Yeni Şikayet</a>
+                        <a href="{% url 'permit_list' %}"><i class="fas fa-file-contract me-2"></i> Ruhsat Başvurularım</a>
+                    {% endif %}
+
+                    {% if user.is_mayor_role %}
+                        <a href="{% url 'mayor_dashboard' %}"><i class="fas fa-chart-line me-2"></i> Başkan Paneli</a>
+                        <a href="{% url 'complaint_list' %}"><i class="fas fa-list me-2"></i> Tüm Şikayetler</a>
+                        <a href="{% url 'permit_list' %}"><i class="fas fa-hard-hat me-2"></i> Ruhsat Projeleri</a>
+                        <a href="{% url 'task_list' %}"><i class="fas fa-tasks me-2"></i> Görevler</a>
+                    {% endif %}
+
+                    {% if user.is_unit_head_role or user.is_staff_role %}
+                        <a href="{% url 'complaint_list' %}"><i class="fas fa-inbox me-2"></i> Gelen Şikayetler</a>
+                        <a href="{% url 'permit_list' %}"><i class="fas fa-drafting-compass me-2"></i> Projeler</a>
+                        <a href="{% url 'task_list' %}"><i class="fas fa-clipboard-check me-2"></i> Görevlerim</a>
+                    {% endif %}
+
+                    <a href="{% url 'chat_index' %}"><i class="fas fa-comments me-2"></i> Mesajlar</a>
+                </div>
+            </div>
+            <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4 content">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% block content %}{% endblock %}
+            </main>
+            {% else %}
+            <main class="col-12 content">
+                {% block full_content %}{% endblock %}
+            </main>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

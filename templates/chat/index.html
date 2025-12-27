@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4">💬 Mesajlaşma</h2>
+<div class="row">
+    <div class="col-md-12">
+        <div class="list-group">
+            {% for u in users %}
+            <a href="{% url 'chat_detail' user_id=u.id %}" class="list-group-item list-group-item-action">
+                <i class="fas fa-user-circle"></i> {{ u.username }}
+                <span class="badge bg-secondary">{{ u.get_role_display }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

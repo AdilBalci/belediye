@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4">🏗️ Ruhsat Projeleri Takip</h2>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Proje Adı</th>
+                <th>Başvuru Sahibi</th>
+                <th>Durum</th>
+                <th>Mühendis</th>
+                <th>Tarih</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for project in projects %}
+            <tr>
+                <td>{{ project.title }}</td>
+                <td>{{ project.applicant_name }}</td>
+                <td>
+                    {% if project.status == 'approved' %}
+                        <span class="badge bg-success">Onaylandı</span>
+                    {% elif project.status == 'rejected' %}
+                        <span class="badge bg-danger">Reddedildi</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">{{ project.get_status_display }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ project.assigned_engineer.username|default:"Atanmadı" }}</td>
+                <td>{{ project.created_at|date:"d M Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">Henüz proje kaydı yok.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

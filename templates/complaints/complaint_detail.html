@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between">
+                <span><strong>{{ complaint.title }}</strong></span>
+                <span class="badge bg-secondary">{{ complaint.created_at|date:"d M Y H:i" }}</span>
+            </div>
+            <div class="card-body">
+                {% if complaint.image %}
+                    <img src="{{ complaint.image.url }}" class="img-fluid mb-3 rounded" style="max-height: 300px;">
+                {% endif %}
+                <p class="card-text">{{ complaint.description }}</p>
+                <hr>
+                <p><strong>Konum:</strong> {{ complaint.location|default:"Belirtilmemiş" }}</p>
+                <p><strong>Durum:</strong> {{ complaint.get_status_display }}</p>
+                <p><strong>Atanan Birim:</strong> {{ complaint.assigned_unit|default:"Henüz atanmadı" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- AI Analysis Widget -->
+        {% if ai_data %}
+        <div class="card border-info mb-3">
+            <div class="card-header bg-info text-white"><i class="fas fa-robot"></i> Yapay Zeka Analizi</div>
+            <div class="card-body">
+                <h6 class="card-title">Özet</h6>
+                <p class="card-text small">{{ ai_data.summary }}</p>
+
+                <h6 class="card-title">Kategori</h6>
+                <span class="badge bg-primary">{{ ai_data.category }}</span>
+
+                <h6 class="card-title mt-2">Aciliyet</h6>
+                {% if ai_data.urgency == 'Yüksek' %}
+                    <span class="badge bg-danger">YÜKSEK</span>
+                {% else %}
+                    <span class="badge bg-warning text-dark">{{ ai_data.urgency }}</span>
+                {% endif %}
+
+                <h6 class="card-title mt-2">Önerilen Birim</h6>
+                <p class="text-muted">{{ ai_data.suggested_unit }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Admin Actions -->
+        {% if user.is_mayor_role or user.is_unit_head_role %}
+        <div class="card">
+            <div class="card-header bg-dark text-white">Yönetici İşlemleri</div>
+            <div class="card-body">
+                <form action="{% url 'assign_complaint' pk=complaint.pk %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Birim Ata</label>
+                        <select name="assigned_unit" class="form-select">
+                            <option value="">Seçiniz...</option>
+                            <option value="Fen İşleri">Fen İşleri</option>
+                            <option value="Park ve Bahçeler">Park ve Bahçeler</option>
+                            <option value="Zabıta">Zabıta</option>
+                            <option value="Temizlik İşleri">Temizlik İşleri</option>
+                            <option value="Ulaşım">Ulaşım</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Atamayı Yap</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

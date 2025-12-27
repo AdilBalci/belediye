@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card" style="height: 80vh;">
+    <div class="card-header bg-primary text-white">
+        <a href="{% url 'chat_index' %}" class="text-white me-2"><i class="fas fa-arrow-left"></i></a>
+        {{ other_user.username }} ile Sohbet
+    </div>
+    <div class="card-body" style="overflow-y: auto; display: flex; flex-direction: column;">
+        {% for msg in chat_messages %}
+            <div class="d-flex mb-3 {% if msg.sender == user %}justify-content-end{% endif %}">
+                <div class="card {% if msg.sender == user %}bg-primary text-white{% else %}bg-light{% endif %}" style="max-width: 70%;">
+                    <div class="card-body py-2 px-3">
+                        {{ msg.content }}
+                        <div class="text-end small {% if msg.sender == user %}text-light{% else %}text-muted{% endif %}" style="font-size: 0.7em;">
+                            {{ msg.timestamp|date:"H:i" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center text-muted">Henüz mesaj yok.</p>
+        {% endfor %}
+    </div>
+    <div class="card-footer">
+        <form method="post" class="d-flex">
+            {% csrf_token %}
+            <input type="text" name="content" class="form-control me-2" placeholder="Mesajınızı yazın..." required>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
+        </form>
+    </div>
+</div>
+{% endblock %}

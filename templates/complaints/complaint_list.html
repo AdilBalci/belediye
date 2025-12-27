@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>📋 Şikayet Listesi</h2>
+    {% if user.is_citizen_role %}
+    <a href="{% url 'create_complaint' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Yeni Şikayet</a>
+    {% endif %}
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Başlık</th>
+                <th>Durum</th>
+                <th>Tarih</th>
+                <th>Birim</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for complaint in complaints %}
+            <tr>
+                <td>{{ complaint.title }}</td>
+                <td>
+                    {% if complaint.status == 'pending' %}
+                        <span class="badge bg-warning text-dark">Beklemede</span>
+                    {% elif complaint.status == 'assigned' %}
+                        <span class="badge bg-info">Atandı</span>
+                    {% elif complaint.status == 'resolved' %}
+                        <span class="badge bg-success">Çözüldü</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ complaint.get_status_display }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ complaint.created_at|date:"d M Y" }}</td>
+                <td>{{ complaint.assigned_unit|default:"-" }}</td>
+                <td>
+                    <a href="{% url 'complaint_detail' pk=complaint.pk %}" class="btn btn-sm btn-outline-primary">Detay</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">Henüz kayıtlı şikayet yok.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">Yeni Şikayet Oluştur</div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Şikayetiniz yapay zeka tarafından analiz edilerek otomatik sınıflandırılacaktır.
+                    </div>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-paper-plane"></i> Gönder</button>
+                    <a href="{% url 'complaint_list' %}" class="btn btn-secondary">İptal</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

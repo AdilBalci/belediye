@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block full_content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h1>🏛️ Belediye Yönetim Sistemi</h1>
+            <p class="lead">Şeffaf, hızlı ve yapay zeka destekli belediyecilik.</p>
+            <hr>
+            <div class="d-grid gap-2">
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Giriş Yap</a>
+                <a href="{% url 'signup' %}" class="btn btn-outline-secondary btn-lg">Vatandaş Kaydı Oluştur</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Hoşgeldiniz, {{ user.username }}</h2>
+        <p>Sol menüden işlemlerinizi gerçekleştirebilirsiniz.</p>
+
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Duyurular</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Sistem Yayında!</h5>
+                        <p class="card-text">Yeni belediye yönetim sistemimiz tüm vatandaşlarımızın hizmetine açılmıştır.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- More widgets can go here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
